@@ -1,10 +1,10 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/pomodoro-timer:$SHORT_SHA', '.']
-  
+    args: ['build', '-t', 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/pomodoro-timer/pomodoro-timer:$SHORT_SHA', '.']
+
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/pomodoro-timer:$SHORT_SHA']
-  
+    args: ['push', 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/pomodoro-timer/pomodoro-timer:$SHORT_SHA']
+
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
     args:
@@ -12,7 +12,7 @@ steps:
       - 'deploy'
       - 'pomodoro-timer'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/pomodoro-timer:$SHORT_SHA'
+      - 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/pomodoro-timer/pomodoro-timer:$SHORT_SHA'
       - '--region'
       - 'asia-northeast1'
       - '--platform'
@@ -30,7 +30,7 @@ steps:
       - '10'
 
 images:
-  - 'gcr.io/$PROJECT_ID/pomodoro-timer:$SHORT_SHA'
+  - 'asia-northeast1-docker.pkg.dev/$PROJECT_ID/pomodoro-timer/pomodoro-timer:$SHORT_SHA'
 
 options:
   logging: 'CLOUD_LOGGING_ONLY'
