@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポモドーロタイマー</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <h1 class="title">🍅 ポモドーロタイマー</h1>
+            <button class="settings-btn" id="settingsBtn">⚙️</button>
+        </header>
+
+        <main class="main">
+            <div class="timer-section">
+                <div class="session-indicator">
+                    <div class="session-type" id="sessionType">作業時間</div>
+                    <div class="session-count">セッション: <span id="sessionCount">1</span></div>
+                </div>
+                
+                <div class="timer-display">
+                    <div class="time" id="timeDisplay">25:00</div>
+                    <div class="progress-ring">
+                        <svg class="progress-svg" width="300" height="300">
+                            <circle class="progress-track" cx="150" cy="150" r="140"></circle>
+                            <circle class="progress-fill" cx="150" cy="150" r="140" id="progressCircle"></circle>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-primary" id="startPauseBtn">開始</button>
+                    <button class="btn btn-secondary" id="resetBtn">リセット</button>
+                    <button class="btn btn-tertiary" id="skipBtn">スキップ</button>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="completedPomodoros">0</div>
+                        <div class="stat-label">完了したポモドーロ</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalFocusTime">0h 0m</div>
+                        <div class="stat-label">今日の集中時間</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="currentStreak">0</div>
+                        <div class="stat-label">連続完了</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayGoal">0/8</div>
+                        <div class="stat-label">今日の目標</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 設定モーダル -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>設定</h2>
+                    <button class="close-btn" id="closeSettingsBtn">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-grid">
+                        <div class="setting-group">
+                            <h3>時間設定</h3>
+                            <div class="setting-item">
+                                <label for="workDuration">作業時間 (分)</label>
+                                <input type="number" id="workDuration" min="1" max="120" value="25">
+                            </div>
+                            <div class="setting-item">
+                                <label for="shortBreakDuration">短い休憩 (分)</label>
+                                <input type="number" id="shortBreakDuration" min="1" max="30" value="5">
+                            </div>
+                            <div class="setting-item">
+                                <label for="longBreakDuration">長い休憩 (分)</label>
+                                <input type="number" id="longBreakDuration" min="1" max="60" value="15">
+                            </div>
+                            <div class="setting-item">
+                                <label for="longBreakInterval">長い休憩の間隔</label>
+                                <input type="number" id="longBreakInterval" min="2" max="10" value="4">
+                            </div>
+                        </div>
+
+                        <div class="setting-group">
+                            <h3>サウンド設定</h3>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="soundEnabled" checked>
+                                    サウンド通知を有効にする
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label for="soundVolume">音量</label>
+                                <input type="range" id="soundVolume" min="0" max="100" value="50">
+                                <span id="volumeValue">50%</span>
+                            </div>
+                            <div class="setting-item">
+                                <label for="notificationSound">通知音</label>
+                                <select id="notificationSound">
+                                    <option value="bell">ベル</option>
+                                    <option value="chime">チャイム</option>
+                                    <option value="ding">ディン</option>
+                                    <option value="pop">ポップ</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="setting-group">
+                            <h3>外観設定</h3>
+                            <div class="setting-item">
+                                <label for="theme">テーマ</label>
+                                <select id="theme">
+                                    <option value="light">ライト</option>
+                                    <option value="dark">ダーク</option>
+                                    <option value="auto">自動</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label for="accentColor">アクセントカラー</label>
+                                <select id="accentColor">
+                                    <option value="blue">ブルー</option>
+                                    <option value="green">グリーン</option>
+                                    <option value="red">レッド</option>
+                                    <option value="purple">パープル</option>
+                                    <option value="orange">オレンジ</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="setting-group">
+                            <h3>その他</h3>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="autoStartBreaks" checked>
+                                    休憩を自動開始
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="autoStartWork">
+                                    作業を自動開始
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <label for="dailyGoal">1日の目標ポモドーロ数</label>
+                                <input type="number" id="dailyGoal" min="1" max="20" value="8">
+                            </div>
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="showNotifications" checked>
+                                    ブラウザ通知を表示
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="resetSettingsBtn">設定をリセット</button>
+                        <button class="btn btn-primary" id="saveSettingsBtn">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 統計モーダル -->
+        <div class="modal" id="statsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>統計情報</h2>
+                    <button class="close-btn" id="closeStatsBtn">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="stats-detailed">
+                        <div class="stat-period">
+                            <button class="period-btn active" data-period="today">今日</button>
+                            <button class="period-btn" data-period="week">今週</button>
+                            <button class="period-btn" data-period="month">今月</button>
+                            <button class="period-btn" data-period="all">全期間</button>
+                        </div>
+                        <div class="detailed-stats" id="detailedStats">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
