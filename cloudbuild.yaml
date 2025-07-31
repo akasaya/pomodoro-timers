@@ -31,3 +31,6 @@ steps:
 
 images:
   - 'gcr.io/$PROJECT_ID/pomodoro-timer:$SHORT_SHA'
+
+options:
+  logging: 'CLOUD_LOGGING_ONLY'
